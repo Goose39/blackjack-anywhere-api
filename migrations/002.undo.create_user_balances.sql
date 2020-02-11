@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS blakcjack_users;
+DROP TABLE IF EXISTS user_balances;

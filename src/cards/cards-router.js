@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 const CardsService = require('./cards-service')
-const { requireAuth } = require('../middleware/basic-auth')
+const { requireAuth } = require('../middleware/jwt-auth')
 const jsonBodyParser = express.json()
 
 const cardsRouter = express.Router()

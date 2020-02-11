@@ -1,5 +1,5 @@
 const express = require('express')
-const path = require('path')
+const BalanceService = require('../balance/balance-service')
 const UsersService = require('./users-service')
 
 const usersRouter = express.Router()
@@ -45,10 +45,16 @@ usersRouter
               newUser
             )
               .then(user => {
-                res
-                  .status(201)
-                  .location(path.posix.join(req.originalUrl, `/${user.id}`))
-                  .json(UsersService.serializeUser(user))
+                return BalanceService.insertUserBalance(
+                  req.app.get('db'), 
+                  user
+                )
+                  .then(result =>  
+                    res
+                      .status(201)
+                      .json(result)
+                      .end()
+                  )
               })
           })
       })
