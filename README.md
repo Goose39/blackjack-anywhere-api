@@ -1,26 +1,98 @@
-# Express Boilerplate!
 
-This is a boilerplate project used for starting new projects!
+# Blackjack Anywhere API
+API built to support the Blackjack Anywhere - React App.
 
-## Set up
+Play blackjack anywhere. Click to go to the [Live App](https://blackjack-anywhere.goose39dev.now.sh/)
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+## API Documentation
+The api is primarily used for authentication purposes. Namely user login and registration. 
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+### Endpoints
 
-## Scripts
+base url `https://sleepy-gorge-26141.herokuapp.com/api`
 
-Start the application `npm start`
+- /users <br />
+user endpoint supports creation of new users and thus only supports POST requests 
 
-Start nodemon for the application `npm run dev`
+`fetch(https://blackjack-anywhere.goose39dev.now.sh/api/users, {`<br />
+&nbsp;` method: 'POST',`<br />
+&nbsp;&nbsp;` headers: {`<br />
+&nbsp;&nbsp;&nbsp;`'content-type': 'application/json',`<br />
+&nbsp;&nbsp;`},`<br />
+&nbsp;&nbsp;` body: JSON.stringify({`  <br />
+&nbsp;&nbsp;&nbsp;        `full_name: new_full_name, `<br />
+&nbsp;&nbsp;&nbsp;        `nick_name: new_name.value, `<br />
+&nbsp;&nbsp;&nbsp;        `user_name: new_name.value,` <br />
+&nbsp;&nbsp;&nbsp;        `password: new_password.value`<br />
+&nbsp;&nbsp; `}),`<br />
+    `})`<br />
 
-Run the tests `npm test`
+All key value pairs are required in the body to pass validation. In addition password must also contain one uppercase, one lowercase, one number and a special character, with a total password length > 8 characters
 
-## Deploying
+- /balance <br />
+balance endpoint supports retrieval of user balances (GET), creation of initial user balance (POST) and updating of user balances (PATCH)<br />
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+GET
+<br />
+ 
+`fetch(https://blackjack-anywhere.goose39dev.now.sh/api/balance, {`<br />
+&nbsp;` method: 'GET',`<br />
+&nbsp;&nbsp;` headers: {`<br />
+&nbsp;&nbsp;&nbsp;`'content-type': 'application/json',`<br />
+&nbsp;&nbsp;`},`<br />
+&nbsp;&nbsp;` body: JSON.stringify({`  <br />
+&nbsp;&nbsp;&nbsp;        `user_name: new_user_name,` <br />
+&nbsp;&nbsp; `}),`<br />
+    `})`<br />
+<br />
+`user_name` must be a valid user_name that has a previously registered account <br />
+NOTE: Only logged in users with valid auth-token can access this endpoint<br />
+<br />
+POST<br />
+<br />
+ 
+`fetch(https://blackjack-anywhere.goose39dev.now.sh/api/balance, {`<br />
+&nbsp;` method: 'POST',`<br />
+&nbsp;&nbsp;` headers: {`<br />
+&nbsp;&nbsp;&nbsp;`'content-type': 'application/json',`<br />
+&nbsp;&nbsp;`},`<br />
+&nbsp;&nbsp;` body: JSON.stringify({`  <br />
+&nbsp;&nbsp;&nbsp;        `user_name: user_name,` <br />
+&nbsp;&nbsp; `}),`<br />
+    `})`<br />
+
+    
+`user_name` must be a valid user_name that has a previously registered account<br />
+<br />
+
+PATCH<br />
+<br />
+ 
+`fetch(https://blackjack-anywhere.goose39dev.now.sh/api/balance, {`<br />
+&nbsp;` method: 'PATCH',`<br />
+&nbsp;&nbsp;` headers: {`<br />
+&nbsp;&nbsp;&nbsp;`'content-type': 'application/json',`<br />
+&nbsp;&nbsp;`},`<br />
+&nbsp;&nbsp;` body: JSON.stringify({`  <br />
+&nbsp;&nbsp;&nbsp;        `user_name: user_name,` <br />
+&nbsp;&nbsp;&nbsp;        `balance: new_balance`<br />
+&nbsp;&nbsp; `}),`<br />
+    `})`<br />
+
+    
+Must be a vaild/registered `user_name` <br />
+NOTE: Only logged in users with valid auth-token can access this endpoint<br />
+<br />
+## Technology
+Built on NodeJS using Express (v4.17.1) web framework. The database selected for this project was PostgreSQL. 
+
+The following supporting Node packages were also used:
+- bcryptjs v2.4.3
+- cors v2.8.5
+- dotenv v8.2.0
+- helmet v3.21.2
+- jsonwebtoken v8.5.1
+- knex v0.20.8
+- morgan v1.9.1
+- pg v7.18.1
+- xss v1.0.6
