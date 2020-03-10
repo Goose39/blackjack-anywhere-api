@@ -1,13 +1,14 @@
 const knex = require('knex')
 const jwt = require('jsonwebtoken')
+const config = require('../src/config')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
 describe('Auth Endpoints', function() {
   let db
 
-  const { testUsers } = helpers.makeArticlesFixtures()
-  const testUser = testUsers[0]
+  const testUsers = helpers.makeUsersArray()
+  const testUser = testUsers[1]
 
   before('make knex instance', () => {
     db = knex({
@@ -74,7 +75,7 @@ describe('Auth Endpoints', function() {
       }
       const expectedToken = jwt.sign(
         { user_id: testUser.id },
-        process.env.JWT_SECRET,
+        config.JWT_SECRET,
         {
           subject: testUser.user_name,
           algorithm: 'HS256',

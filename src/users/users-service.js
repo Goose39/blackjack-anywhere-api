@@ -16,6 +16,8 @@ const UsersService = {
       .then(([user]) => user)
   },
   validatePassword(password) {
+    const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
+    
     if (password.length < 8) {
       return 'Password must be at least 8 characters'
     }
