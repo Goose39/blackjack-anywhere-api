@@ -6,7 +6,7 @@ const helpers = require('./test-helpers')
 describe('Users Endpoints', function() {
   let db
 
-  const { testUsers } = helpers.makeArticlesFixtures()
+  const testUsers = helpers.makeUsersArray()
   const testUser = testUsers[0]
 
   before('make knex instance', () => {
@@ -54,7 +54,7 @@ describe('Users Endpoints', function() {
         })
       })
 
-      it(`responds 400 'Password be longer than 8 characters' when empty password`, () => {
+      it(`responds 400 'Password must be at least 8 characters' when empty password`, () => {
         const userShortPassword = {
           user_name: 'test user_name',
           password: '1234567',
@@ -63,10 +63,10 @@ describe('Users Endpoints', function() {
         return supertest(app)
           .post('/api/users')
           .send(userShortPassword)
-          .expect(400, { error: `Password be longer than 8 characters` })
+          .expect(400, { error: `Password must be at least 8 characters` })
       })
 
-      it(`responds 400 'Password be less than 72 characters' when long password`, () => {
+      it(`responds 400 'Password must be less than 72 characters' when long password`, () => {
         const userLongPassword = {
           user_name: 'test user_name',
           password: '*'.repeat(73),
@@ -75,7 +75,7 @@ describe('Users Endpoints', function() {
         return supertest(app)
           .post('/api/users')
           .send(userLongPassword)
-          .expect(400, { error: `Password be less than 72 characters` })
+          .expect(400, { error: `Password must be less than 72 characters` })
       })
 
       it(`responds 400 error when password starts with spaces`, () => {
@@ -87,7 +87,7 @@ describe('Users Endpoints', function() {
         return supertest(app)
           .post('/api/users')
           .send(userPasswordStartsSpaces)
-          .expect(400, { error: `Password must not start or end with empty spaces` })
+          .expect(400, { error: `Password cannot start or end with empty spaces` })
       })
 
       it(`responds 400 error when password ends with spaces`, () => {
@@ -99,7 +99,7 @@ describe('Users Endpoints', function() {
         return supertest(app)
           .post('/api/users')
           .send(userPasswordEndsSpaces)
-          .expect(400, { error: `Password must not start or end with empty spaces` })
+          .expect(400, { error: `Password cannot start or end with empty spaces` })
       })
 
       it(`responds 400 error when password isn't complex enough`, () => {
@@ -139,30 +139,20 @@ describe('Users Endpoints', function() {
           .send(newUser)
           .expect(201)
           .expect(res => {
-            expect(res.body).to.have.property('id')
             expect(res.body.user_name).to.eql(newUser.user_name)
-            expect(res.body.full_name).to.eql(newUser.full_name)
-            expect(res.body.nickname).to.eql('')
-            expect(res.body).to.not.have.property('password')
-            expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
-            const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
-            const actualDate = new Date(res.body.date_created).toLocaleString()
-            expect(actualDate).to.eql(expectedDate)
+            expect(res.body.balance).to.eql(1000)
           })
           .expect(res =>
             db
-              .from('blogful_users')
+              .from('blackjack_users')
               .select('*')
-              .where({ id: res.body.id })
+              .where({ user_name: res.body.user_name })
               .first()
               .then(row => {
                 expect(row.user_name).to.eql(newUser.user_name)
                 expect(row.full_name).to.eql(newUser.full_name)
                 expect(row.nickname).to.eql(null)
-                const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
-                const actualDate = new Date(row.date_created).toLocaleString()
-                expect(actualDate).to.eql(expectedDate)
-
+                
                 return bcrypt.compare(newUser.password, row.password)
               })
               .then(compareMatch => {
