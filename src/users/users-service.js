@@ -1,5 +1,5 @@
-const bcrypt = require('bcryptjs')
-const xss = require('xss')
+const bcrypt = require('bcryptjs');
+const xss = require('xss');
 
 const UsersService = {
   hasUserWithUserName(db, user_name) {
@@ -44,6 +44,6 @@ const UsersService = {
       date_created: new Date(user.date_created),
     }
   },
-}
+};
 
-module.exports = UsersService
+module.exports = UsersService;

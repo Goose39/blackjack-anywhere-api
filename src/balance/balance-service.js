@@ -19,6 +19,6 @@ const BalanceService = {
         .returning('*')
         .then(([user]) => user)
   },
-}
+};
 
-module.exports = BalanceService
+module.exports = BalanceService;

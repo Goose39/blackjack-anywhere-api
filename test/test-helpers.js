@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs')
-const config = require('../src/config')
-const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs');
+const config = require('../src/config');
+const jwt = require('jsonwebtoken');
 
 function makeUsersArray() {
   return [
@@ -26,7 +26,7 @@ function makeUsersArray() {
       password: 'P@55word',
     },
   ]
-}
+};
 
 
 function cleanTables(db) {
@@ -43,14 +43,14 @@ function cleanTables(db) {
         trx.raw(`SELECT setval('blackjack_users_id_seq', 0)`),
       ])
     )
-  )
-}
+  );
+};
 
 function seedUsers(db, users) {
   const preppedUsers = users.map(user => ({
     ...user,
     password: bcrypt.hashSync(user.password, 1)
-  }))
+  }));
   return db.into('blackjack_users').insert(preppedUsers)
     .then(() =>
       // update the auto sequence to stay in sync
@@ -58,20 +58,20 @@ function seedUsers(db, users) {
         `SELECT setval('blackjack_users_id_seq', ?)`,
         [users[users.length - 1].id],
       )
-    )
-}
+    );
+};
 
 function makeAuthHeader(user, secret = config.JWT_SECRET) {
   const token = jwt.sign({ id: user.id }, secret, {
     subject: user.user_name,
     algorithm: 'HS256',
-  })
-  return `Bearer ${token}`
-}
+  });
+  return `Bearer ${token}`;
+};
 
 module.exports = {
   makeUsersArray,
   cleanTables,
   makeAuthHeader,
   seedUsers,
-}
+};

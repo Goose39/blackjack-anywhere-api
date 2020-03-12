@@ -1,9 +1,9 @@
-const express = require('express')
-const BalanceService = require('./balance-service')
-const { requireAuth } = require('../middleware/jwt-auth')
+const express = require('express');
+const BalanceService = require('./balance-service');
+const { requireAuth } = require('../middleware/jwt-auth');
 
-const balanceRouter = express.Router()
-const jsonBodyParser = express.json()
+const balanceRouter = express.Router();
+const jsonBodyParser = express.json();
 
 balanceRouter
   .route('/:user_name')
@@ -15,17 +15,17 @@ balanceRouter
               .then(balance => {
                 res.json(balance)
               })
-    })
+    });
 
 balanceRouter
   .route('/:user_name')
   .patch(jsonBodyParser, requireAuth, (req, res, next) => {
-    const { user_name, balance } = req.body
+    const { user_name, balance } = req.body;
 
       if (user_name == null || balance == null)
         return res.status(400).json({
           error: `Missing '${key}' in request body`
-        })
+        });
 
     BalanceService.updateUserBalance(
               req.app.get('db'), 
@@ -35,15 +35,15 @@ balanceRouter
                   .status(200)
                   .json(response)
               })
-              .catch(next)
-  })
+              .catch(next);
+  });
 
   balanceRouter
   .route('/:user_name')
   .post((req, res, next) => {
 
-    const user_name = req.params.user_name
-    const newUser = { user_name }
+    const user_name = req.params.user_name;
+    const newUser = { user_name };
 
     BalanceService.insertUserBalance(
               req.app.get('db'), 
@@ -53,6 +53,7 @@ balanceRouter
                   .status(201)
                   .end()
               })
-              .catch(next)
-  })
-module.exports = balanceRouter
+              .catch(next);
+  });
+
+module.exports = balanceRouter;

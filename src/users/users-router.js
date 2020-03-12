@@ -1,9 +1,9 @@
-const express = require('express')
-const BalanceService = require('../balance/balance-service')
-const UsersService = require('./users-service')
+const express = require('express');
+const BalanceService = require('../balance/balance-service');
+const UsersService = require('./users-service');
 
-const usersRouter = express.Router()
-const jsonBodyParser = express.json()
+const usersRouter = express.Router();
+const jsonBodyParser = express.json();
 
 usersRouter
   .post('/', jsonBodyParser, (req, res, next) => {
@@ -15,12 +15,10 @@ usersRouter
           error: `Missing '${field}' in request body`
         })
 
-    // TODO: check user_name doesn't start with spaces
-
     const passwordError = UsersService.validatePassword(password)
 
     if (passwordError)
-      return res.status(400).json({ error: passwordError })
+      return res.status(400).json({ error: passwordError });
 
     UsersService.hasUserWithUserName(
       req.app.get('db'),
@@ -28,7 +26,7 @@ usersRouter
     )
       .then(hasUserWithUserName => {
         if (hasUserWithUserName)
-          return res.status(400).json({ error: `Username already taken` })
+          return res.status(400).json({ error: `Username already taken` });
 
         return UsersService.hashPassword(password)
           .then(hashedPassword => {
@@ -38,7 +36,7 @@ usersRouter
               full_name,
               nickname,
               date_created: 'now()',
-            }
+            };
 
             return UsersService.insertUser(
               req.app.get('db'),
@@ -59,6 +57,6 @@ usersRouter
           })
       })
       .catch(next)
-  })
+  });
 
-module.exports = usersRouter
+module.exports = usersRouter;

@@ -3,4 +3,4 @@ module.exports = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   DATABASE_URL: process.env.DATABASE_URL || 'postgresql://dunder_mifflin:123456@localhost/blogful-auth',
   JWT_SECRET: process.env.JWT_SECRET || 'change-this-secret',
-}
+};
